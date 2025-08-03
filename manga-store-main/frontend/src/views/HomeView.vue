@@ -1,7 +1,7 @@
 <template>
   <div>
-    <h1>Danh sách Manga</h1>
-    <div v-if="loading">Đang tải...</div>
+    <h1>Manga List </h1>
+    <div v-if="loading">Loading...</div>
     <div v-if="error" class="error">{{ error }}</div>
     <div class="manga-list">
       <div
@@ -12,7 +12,7 @@
       >
         <img :src="manga.coverImage" alt="cover" class="cover" />
         <h3>{{ manga.title }}</h3>
-        <p>Giá: {{ manga.price }} VND</p>
+        <p>Price: {{ manga.price }} VND</p>
       </div>
     </div>
   </div>

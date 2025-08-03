@@ -6,15 +6,27 @@
     <div class="navbar-right">
       <router-link to="/" class="nav-link">Home</router-link>
 
+      <!-- Admin Panel Link - Only show for admin users -->
+      <router-link 
+        v-if="isAdmin" 
+        to="/admin/mangas" 
+        class="nav-link admin-link"
+      >
+        🛠️ Admin Panel
+      </router-link>
+
       <a @click.prevent="goToCart" class="nav-link cart-link">
         Cart ({{ cartCount }})
       </a>
-      <router-link to="/orders" class="nav-link">Lịch sử đơn hàng</router-link>
+      <router-link to="/orders" class="nav-link">Payment History</router-link>
 
-      <span v-if="userName" class="nav-user">Hi, {{ userName }}</span>
+      <span v-if="userName" class="nav-user">
+        Hi, {{ userName }}
+        <span v-if="isAdmin" class="admin-badge">ADMIN</span>
+      </span>
 
-      <button v-if="isLoggedIn" class="btn-logout" @click="logout">Đăng xuất</button>
-      <router-link v-else to="/login" class="nav-link">Đăng nhập</router-link>
+      <button v-if="isLoggedIn" class="btn-logout" @click="logout">Log out</button>
+      <router-link v-else to="/login" class="nav-link">Log in</router-link>
     </div>
   </nav>
 </template>
@@ -36,6 +48,8 @@ const cartCount = computed(() =>
 const isLoggedIn = computed(() => userStore.isLoggedIn)
 
 const userName = computed(() => (userStore.user ? userStore.user.username : ''))
+
+const isAdmin = computed(() => userStore.user?.role === 'admin')
 
 function goToCart() {
   router.push('/cart')
@@ -76,10 +90,28 @@ function logout() {
   text-decoration: none;
   cursor: pointer;
   font-weight: 600;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
 }
 
 .nav-link:hover {
-  text-decoration: underline;
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-1px);
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.nav-link:active {
+  transform: translateY(0);
+}
+
+/* Active link styling */
+.nav-link.router-link-active {
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .cart-link {
@@ -104,5 +136,34 @@ function logout() {
 
 .btn-logout:hover {
   background-color: #dc2626;
+}
+
+.admin-link {
+  background: linear-gradient(45deg, #f59e0b, #d97706);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-weight: 700;
+  text-decoration: none !important;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.admin-link:hover {
+  background: linear-gradient(45deg, #d97706, #b45309);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-decoration: none !important;
+}
+
+.admin-badge {
+  background-color: #f59e0b;
+  color: #1f2937;
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 </style>
